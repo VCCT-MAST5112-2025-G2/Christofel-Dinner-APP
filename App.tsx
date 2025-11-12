@@ -66,6 +66,76 @@ function HomeScreen({ navigation }: any) {
     </ScrollView>
   );
 }
+// Menue
+function MenuScreen() {
+  const [selected, setSelected] = useState('Starters');
+  const [items, setItems] = useState<any[]>([]);
+
+  // Ensures data is fresh every time the screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      const fetchItems = async () => {
+        const fresh = await loadItems();
+        setItems(fresh);
+      };
+      fetchItems();
+      return () => {}; 
+    }, [])
+  );
+
+  const filtered = items.filter((i) =>
+    selected === 'Starters'
+      ? i.category === 'Starter'
+      : selected === 'Mains'
+      ? i.category === 'Main'
+      : selected === 'Desserts' 
+      ? i.category === 'Dessert' 
+      : false
+  );
+
+  return (
+    <ScrollView style={styles.app} contentContainerStyle={styles.centerScroll}>
+      <StatusBar style="light" />
+      <Text style={styles.title}>Menu</Text>
+
+      <View style={styles.navBar}>
+        {['Starters', 'Mains', 'Desserts'].map((t) => (
+          <TouchableOpacity
+            key={t}
+            style={selected === t ? styles.navItemActive : styles.navItem}
+            onPress={() => setSelected(t)}
+          >
+            <Text
+              style={selected === t ? styles.navTextActive : styles.navText}
+            >
+              {t}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {filtered.length === 0 && (
+        <Text style={{ color: T.muted, marginTop: 16 }}>
+          No items in this category yet.
+        </Text>
+      )}
+
+      {filtered.map((it, idx) => (
+        <View key={idx} style={styles.card}>
+          <Image 
+            source={it.image ? { uri: it.image } : logoImg} 
+            style={styles.dishImg} 
+          />
+          <Text style={styles.dishTitle}>{it.name}</Text>
+          <Text style={styles.dishDesc}>{it.description}</Text>
+          <Text style={styles.price}>R{Number(it.price).toFixed(2)}</Text>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
+
+
 // Style sheet
 const styles = StyleSheet.create({
 
