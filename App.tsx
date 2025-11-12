@@ -22,5 +22,48 @@ const T = {
   buttonText: '#000',
 };
 
+const STORAGE_KEY = '@menu_items_v1';
 
+async function loadItems() {
+  try {
+    const raw = await AsyncStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw);
+  } catch (e) {
+    console.warn('loadItems err', e);
+    return [];
+  }
+}
+async function saveItems(items: any[]) {
+  try {
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  } catch (e) {
+    console.warn('saveItems err', e);
+  }
+}
+//Home
+function HomeScreen({ navigation }: any) {
+  return (
+    <ScrollView style={styles.app} contentContainerStyle={styles.centerScroll}>
+      <StatusBar style="light" />
+      <Image source={logoImg} style={styles.lo  go} />
+      <Text style={styles.title}>Christoffel Dinner</Text>
+      <Text style={styles.hint}>Welcome</Text>
+
+      <TouchableOpacity
+        style={styles.bigButton}
+        onPress={() => navigation.navigate('Menu')} 
+      >
+        <Text style={styles.bigButtonText}>Menu</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.bigButton}
+        onPress={() => navigation.navigate('Owner')}
+      >
+        <Text style={styles.bigButtonText}>Owner</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+}
 
