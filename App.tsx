@@ -46,7 +46,7 @@ function HomeScreen({ navigation }: any) {
   return (
     <ScrollView style={styles.app} contentContainerStyle={styles.centerScroll}>
       <StatusBar style="light" />
-      <Image source={logoImg} style={styles.lo  go} />
+      <Image source={logoImg} style={styles.logo} />
       <Text style={styles.title}>Christoffel Dinner</Text>
       <Text style={styles.hint}>Welcome</Text>
 
@@ -66,4 +66,120 @@ function HomeScreen({ navigation }: any) {
     </ScrollView>
   );
 }
+// Style sheet
+const styles = StyleSheet.create({
+
+  app: 
+  { flex: 1,
+   backgroundColor: T.background 
+  },
+
+  centerScroll: 
+  { alignItems: 'center', 
+    paddingTop: 40, 
+    paddingBottom: 60 },
+
+  logo: { width: 120, 
+    height: 120, 
+    borderRadius: 12, 
+    marginBottom: 18 },
+
+  title: { color: T.text, 
+    fontSize: 22,
+     fontWeight: '700', 
+     marginBottom: 6 },
+
+  hint: { color: T.muted, 
+    fontSize: 14, 
+    marginBottom: 14,
+     textAlign: 'center',
+      paddingHorizontal: 20 },
+
+  bigButton: { width: '85%',
+     backgroundColor: T.buttonBg,
+      paddingVertical: 12, 
+      borderRadius: 10, 
+      alignItems: 'center',
+       marginTop: 12 },
+
+  bigButtonText: { color: T.buttonText, 
+    fontWeight: '700' },
+
+  navBar: { flexDirection: 'row', 
+    justifyContent: 'space-around',
+     backgroundColor: T.panel,
+      paddingVertical: 10, 
+      width: '92%', 
+      borderRadius: 12,
+       marginTop: 18 },
+
+  navItem: { paddingVertical: 8,
+     paddingHorizontal: 12,
+      borderRadius: 8 },
+
+
+  navItemActive: { backgroundColor: T.accent, 
+    borderRadius: 8,
+     paddingVertical: 8, 
+     paddingHorizontal: 12 },
+
+  navText: { color: T.text,
+     fontWeight: '700' },
+
+  navTextActive: { color: '#000', 
+    fontWeight: '800' },
+
+  card: { width: '92%',
+     backgroundColor: T.panel,
+      borderRadius: 12, 
+      padding: 14,
+       marginTop: 16 },
+
+  dishImg: { width: '100%',
+     height: 170,
+      borderRadius: 10, 
+      marginBottom: 10 },
+
+  dishTitle: { color: T.text,
+     fontSize: 18, 
+     fontWeight: '700' },
+
+  dishDesc: { color: T.muted, 
+    marginTop: 6,
+     marginBottom: 8 },
+
+  price: { color: T.accent, 
+    fontWeight: '800' },
+
+  input: { width: '92%',
+     backgroundColor: T.panel,
+      color: T.text, 
+      padding: 12, 
+      borderRadius: 10, 
+      alignSelf: 'center',
+       marginTop: 12 },
+
+  imagePicker: { width: '92%',
+     height: 160,
+      backgroundColor: T.panel,
+       borderRadius: 12,
+        alignSelf: 'center',
+         marginTop: 12, 
+         justifyContent: 'center', 
+         alignItems: 'center', 
+         borderWidth: 1,
+          borderColor: '#222' },
+
+  editButton: { backgroundColor: '#4caf50',
+     padding: 8, borderRadius: 8, 
+     flex: 1, 
+     alignItems: 'center', 
+     marginRight: 6 },
+  
+  deleteButton: { backgroundColor: '#f44336',
+     padding: 8,
+      borderRadius: 8, 
+      flex: 1, 
+      alignItems: 'center' },
+});
 
