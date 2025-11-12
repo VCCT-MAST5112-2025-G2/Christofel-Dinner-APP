@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   StyleSheet, Text, View, TouchableOpacity, TextInput,
   Image, ScrollView, Alert, Platform
@@ -24,25 +24,28 @@ const T = {
 
 const STORAGE_KEY = '@menu_items_v1';
 
+// Load saved dishes
 async function loadItems() {
   try {
     const raw = await AsyncStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     return JSON.parse(raw);
   } catch (e) {
-    console.warn('loadItems err', e);
+    console.warn('loadItems error', e);
     return [];
   }
 }
+
+// Save dishes
 async function saveItems(items) {
   try {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   } catch (e) {
-    console.warn('saveItems err', e);
+    console.warn('saveItems error', e);
   }
 }
 
-// Home Screen
+// 🏠 Home Screen
 function HomeScreen({ navigation }) {
   return (
     <ScrollView style={styles.app} contentContainerStyle={styles.centerScroll}>
@@ -51,24 +54,18 @@ function HomeScreen({ navigation }) {
       <Text style={styles.title}>Christoffel Dinner</Text>
       <Text style={styles.hint}>Welcome</Text>
 
-      <TouchableOpacity
-        style={styles.bigButton}
-        onPress={() => navigation.navigate('Menu')}
-      >
+      <TouchableOpacity style={styles.bigButton} onPress={() => navigation.navigate('Menu')}>
         <Text style={styles.bigButtonText}>Menu</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.bigButton}
-        onPress={() => navigation.navigate('Owner')}
-      >
+      <TouchableOpacity style={styles.bigButton} onPress={() => navigation.navigate('Owner')}>
         <Text style={styles.bigButtonText}>Owner</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 }
 
-// Menu Screen
+// 🍽️ Menu Screen
 function MenuScreen() {
   const [selected, setSelected] = useState('Starters');
   const [items, setItems] = useState([]);
@@ -80,7 +77,6 @@ function MenuScreen() {
         setItems(fresh);
       };
       fetchItems();
-      return () => {};
     }, [])
   );
 
@@ -106,27 +102,18 @@ function MenuScreen() {
             style={selected === t ? styles.navItemActive : styles.navItem}
             onPress={() => setSelected(t)}
           >
-            <Text
-              style={selected === t ? styles.navTextActive : styles.navText}
-            >
-              {t}
-            </Text>
+            <Text style={selected === t ? styles.navTextActive : styles.navText}>{t}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
       {filtered.length === 0 && (
-        <Text style={{ color: T.muted, marginTop: 16 }}>
-          No items in this category yet.
-        </Text>
+        <Text style={{ color: T.muted, marginTop: 16 }}>No items in this category yet.</Text>
       )}
 
       {filtered.map((it, idx) => (
         <View key={idx} style={styles.card}>
-          <Image
-            source={it.image ? { uri: it.image } : logoImg}
-            style={styles.dishImg}
-          />
+          <Image source={it.image ? { uri: it.image } : logoImg} style={styles.dishImg} />
           <Text style={styles.dishTitle}>{it.name}</Text>
           <Text style={styles.dishDesc}>{it.description}</Text>
           <Text style={styles.price}>R{Number(it.price).toFixed(2)}</Text>
@@ -136,8 +123,8 @@ function MenuScreen() {
   );
 }
 
-// Owner Screen
-function OwnerScreen({ navigation }) {
+// 👨‍🍳 Owner Screen
+function OwnerScreen() {
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
   const [price, setPrice] = useState('');
@@ -153,12 +140,16 @@ function OwnerScreen({ navigation }) {
         setItems(saved);
       };
       loadInitialItems();
-      return () => {};
     }, [])
   );
 
   const resetForm = () => {
-    setName(''); setDesc(''); setPrice(''); setCategory('Starter'); setImage(null); setEditingIndex(null);
+    setName('');
+    setDesc('');
+    setPrice('');
+    setCategory('Starter');
+    setImage(null);
+    setEditingIndex(null);
   };
 
   const pickImage = async () => {
@@ -175,17 +166,21 @@ function OwnerScreen({ navigation }) {
   };
 
   const saveDish = async () => {
-    if (!name.trim() || !desc.trim() || !price.trim()) return Alert.alert('Missing fields', 'Fill all fields.');
+    if (!name.trim() || !desc.trim() || !price.trim()) {
+      return Alert.alert('Missing fields', 'Please fill all fields.');
+    }
 
     const parsedPrice = Number(price);
-    if (isNaN(parsedPrice) || parsedPrice <= 0) return Alert.alert('Invalid price', 'Enter a valid positive number.');
+    if (isNaN(parsedPrice) || parsedPrice <= 0) {
+      return Alert.alert('Invalid price', 'Enter a valid positive number.');
+    }
 
     const newDish = {
       name: name.trim(),
       description: desc.trim(),
       price: parsedPrice.toFixed(2),
       category,
-      image: image || null
+      image: image || null,
     };
 
     let next;
@@ -198,7 +193,6 @@ function OwnerScreen({ navigation }) {
 
     setItems(next);
     await saveItems(next);
-
     resetForm();
     Alert.alert('Success', 'Dish saved successfully!');
   };
@@ -226,11 +220,28 @@ function OwnerScreen({ navigation }) {
       <Text style={styles.hint}>Add, edit, or delete dishes here.</Text>
 
       <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-        {image ? <Image source={{ uri: image }} style={{ width: '100%', height: '100%', borderRadius: 12 }} /> : <Text style={{ color: T.muted }}>Tap to select image</Text>}
+        {image ? (
+          <Image source={{ uri: image }} style={{ width: '100%', height: '100%', borderRadius: 12 }} />
+        ) : (
+          <Text style={{ color: T.muted }}>Tap to select image</Text>
+        )}
       </TouchableOpacity>
 
-      <TextInput style={styles.input} placeholder="Dish name" placeholderTextColor={T.muted} value={name} onChangeText={setName} />
-      <TextInput style={[styles.input, { height: 90, textAlignVertical: 'top' }]} placeholder="Description" placeholderTextColor={T.muted} multiline value={desc} onChangeText={setDesc} />
+      <TextInput
+        style={styles.input}
+        placeholder="Dish name"
+        placeholderTextColor={T.muted}
+        value={name}
+        onChangeText={setName}
+      />
+      <TextInput
+        style={[styles.input, { height: 90, textAlignVertical: 'top' }]}
+        placeholder="Description"
+        placeholderTextColor={T.muted}
+        multiline
+        value={desc}
+        onChangeText={setDesc}
+      />
       <TextInput
         style={styles.input}
         placeholder="Price (e.g. 45.00)"
@@ -242,14 +253,21 @@ function OwnerScreen({ navigation }) {
 
       <View style={{ width: '92%', flexDirection: 'row', justifyContent: 'space-around', marginTop: 12 }}>
         {['Starter', 'Main', 'Dessert'].map((c) => (
-          <TouchableOpacity key={c} style={{ padding: 8, borderRadius: 8, backgroundColor: category === c ? T.accent : T.panel }} onPress={() => setCategory(c)}>
+          <TouchableOpacity
+            key={c}
+            style={{ padding: 8, borderRadius: 8, backgroundColor: category === c ? T.accent : T.panel }}
+            onPress={() => setCategory(c)}
+          >
             <Text style={{ color: category === c ? '#000' : T.text, fontWeight: '700' }}>{c}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
       {editingIndex !== null && (
-        <TouchableOpacity style={[styles.bigButton, { marginTop: 18, backgroundColor: T.muted }]} onPress={resetForm}>
+        <TouchableOpacity
+          style={[styles.bigButton, { marginTop: 18, backgroundColor: T.muted }]}
+          onPress={resetForm}
+        >
           <Text style={styles.bigButtonText}>Cancel Edit</Text>
         </TouchableOpacity>
       )}
@@ -258,7 +276,10 @@ function OwnerScreen({ navigation }) {
         <Text style={styles.bigButtonText}>{editingIndex !== null ? 'Save Changes' : 'Add Dish'}</Text>
       </TouchableOpacity>
 
-      <Text style={{ color: T.text, fontSize: 18, fontWeight: '700', marginTop: 30, marginBottom: 10 }}>Existing Dishes</Text>
+      <Text style={{ color: T.text, fontSize: 18, fontWeight: '700', marginTop: 30, marginBottom: 10 }}>
+        Existing Dishes
+      </Text>
+
       {items.length === 0 && <Text style={{ color: T.muted }}>No dishes found.</Text>}
 
       {items.map((it, idx) => (
@@ -282,12 +303,16 @@ function OwnerScreen({ navigation }) {
   );
 }
 
-// App Component
+//  App
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        screenOptions={{ headerStyle: { backgroundColor: T.background }, headerTintColor: '#fff', headerTitleStyle: { fontWeight: '700' } }}
+        screenOptions={{
+          headerStyle: { backgroundColor: T.background },
+          headerTintColor: '#fff',
+          headerTitleStyle: { fontWeight: '700' },
+        }}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Menu" component={MenuScreen} />
@@ -297,7 +322,7 @@ export default function App() {
   );
 }
 
-// Styles
+//  Styles
 const styles = StyleSheet.create({
   app: { flex: 1, backgroundColor: T.background },
   centerScroll: { alignItems: 'center', paddingTop: 40, paddingBottom: 60 },
