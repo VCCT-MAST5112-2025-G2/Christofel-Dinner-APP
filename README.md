@@ -60,7 +60,7 @@ The application has a simple user interface
 ![Image 3](https://github.com/user-attachments/assets/090e6530-4ee8-45b1-b128-0ea311f98db4)
 ![Image 4](https://github.com/user-attachments/assets/62463ca4-1ecf-436f-9c38-f2f16f8b3390)
 
-## 
+CHANGELOG.md
 
 ## Videos 
 https://youtube.com/shorts/gZBvYe24oX4?si=2JlYAiKKzs0vJ6TQ ( android version)
