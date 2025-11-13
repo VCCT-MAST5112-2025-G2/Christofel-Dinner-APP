@@ -242,7 +242,7 @@ function OwnerScreen() {
         )}
       </TouchableOpacity>
 
-      {/* Menu item name input */}
+      {/* Menu item  with an name input */}
       <TextInput
         style={styles.input}
         placeholder="Menu item name"
@@ -251,7 +251,7 @@ function OwnerScreen() {
         onChangeText={setName}
       />
 
-      {/* Menu item description input */}
+      {/* Menu item  with a description input */}
       <TextInput
         style={[styles.input, { height: 90, textAlignVertical: 'top' }]}
         placeholder="Description"
@@ -284,7 +284,7 @@ function OwnerScreen() {
         ))}
       </View>
 
-      {/* delete and edit button */}
+      {/* this is to delete and edit button */}
       {editingIndex !== null && (
         <TouchableOpacity
           style={[styles.bigButton, { marginTop: 18, backgroundColor: T.muted }]}
